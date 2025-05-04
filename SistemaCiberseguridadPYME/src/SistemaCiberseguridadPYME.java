@@ -18,16 +18,24 @@ public class SistemaCiberseguridadPYME {
         } catch (IllegalArgumentException e) {
             System.err.println("Error en datos: " + e.getMessage());
         }
+        // --- Colecciones ---
+        gestor.mostrarVulnerabilidadesCriticas();
     }
 }
 
 
 class GestorVulnerabilidades {
+    //Colecciones
     private Map<String, Vulnerabilidad> vulnerabilidades = new HashMap<>();
     private PriorityQueue<Vulnerabilidad> colaCriticas = new PriorityQueue<>(
             (v1, v2) -> Double.compare(v2.getCvss(), v1.getCvss())
     );
-
+    public void agregarVulnerabilidad(Vulnerabilidad vuln) {
+        vulnerabilidades.put(vuln.getCve(), vuln);
+        if (vuln.getCVSS() >= 9.0) {
+            colaCriticas.add(vuln); // Prioriza vulnerabilidades críticas
+        }
+    }
     //Sobrecarga de metodos
     public void registrarVulnerabilidad(String cve) throws CVEInvalidoException {
         if (!validarCVE(cve)) {
