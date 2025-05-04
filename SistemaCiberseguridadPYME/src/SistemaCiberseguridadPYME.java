@@ -60,9 +60,14 @@ class GestorVulnerabilidades {
     private boolean validarCVE(String cve) {
         return cve.matches("^CVE-\\d{4}-\\d{4,}$");
     }
+    // Muestra vulnerabilidades críticas (Colecciones)
+    public void mostrarVulnerabilidadesCriticas() {
+        System.out.println("\n--- Vulnerabilidades Críticas (CVSS >= 9.0) ---");
+        colaCriticas.forEach(v -> System.out.println(
+                "CVE: " + v.getCve() + " | CVSS: " + v.getCvss() + " | Descripción: " + v.getDescripcion())
+        );
+    }
 
-    
-    
 }
 
 
