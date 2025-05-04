@@ -7,12 +7,17 @@ public class SistemaCiberseguridadPYME {
 
     public static void main(String[] args) {
         GestorVulnerabilidades gestor = new GestorVulnerabilidades();
-        
+        try {
             // --- Sobrecarga de métodos ---
             gestor.registrarVulnerabilidad("CVE-2023-1234"); 
             gestor.registrarVulnerabilidad("Log4Shell", 10.0, "Vulnerabilidad crítica en Log4j"); 
-
-        
+            // --- Manejo de errores ---
+            gestor.registrarVulnerabilidad("CVE-2023-ABCD");
+        } catch (CVEInvalidoException e) {
+            System.err.println("Error al registrar: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error en datos: " + e.getMessage());
+        }
     }
 }
 
@@ -31,6 +36,8 @@ class GestorVulnerabilidades {
         Vulnerabilidad vuln = new Vulnerabilidad(cve, 0.0, "Sin descripción");
         vulnerabilidades.put(cve, vuln);
     }    
+    
+    //Manejo de errores
     public void registrarVulnerabilidad(String nombre, double cvss, String descripcion) {
         if (cvss < 0.0 || cvss > 10.0) {
             throw new IllegalArgumentException("CVSS debe ser entre 0.0 y 10.0");
@@ -42,8 +49,6 @@ class GestorVulnerabilidades {
             colaCriticas.add(vuln);  
         }
     }
-    
-
     private boolean validarCVE(String cve) {
         return cve.matches("^CVE-\\d{4}-\\d{4,}$");
     }
